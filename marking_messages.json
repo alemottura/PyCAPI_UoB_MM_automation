@@ -1,0 +1,12 @@
+{ 
+    "body" : {
+        "5 days left" : "Hi,\n\nThis is an IMPORTANT reminder that the due date for grading %s will be in 5 days and there are still submissions left ungraded.\nMeeting the 15 working day turnaround time is vitally important for us as a school as it plays directly into our NSS scores. So, could you please address this as soon as possible?\nLink: %s\n\nSubmissions: %s\nUngraded submissions: %s\nMuted: \n\nBest Regards,\nMet&Mat Office",
+        "1 day left" : "Hi,\n\nThis is an VERY IMPORTANT reminder that the due date for grading %s is tomorrow, and there are still submissions left ungraded.\nThis must be addressed immediately.\nLink: %s\n\nSubmissions: %s\nUngraded submissions: %s\nMuted: \n\nBest Regards,\nMet&Mat Office",
+        "overdue": "Hi,\n\nDeadline for assignment feedback has passed, here is a summary of relevant information:\n\nAssignment: %s\nLink: %s\n\nSubmissions: %s\nUngraded submissions: %s\nManual posting: %s\n\nBest Regards,\nMet&Mat Office"
+    },
+    "subject" : {
+        "5 days left" : "IMPORTANT: An assignment needs to be graded",
+        "1 day left" : "ATTENTION REQUIRED: Assignment submissions still ungraded",
+        "overdue" : "ATTENTION REQUIRED: Feedback deadline has passed"
+    }
+}
