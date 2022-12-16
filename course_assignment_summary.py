@@ -11,7 +11,7 @@
 #       Things that need to be set:
 #
 #       output_dir - path of Excel file to be saved
-output_dir = '/mnt/metadmin/CANVASBOTS/'
+output_dir = "" #'/mnt/metadmin/CANVASBOTS/'
 #
 #       name_extenstion - name of Excel file after Canvas course number
 name_extension = 'assignment_summary'
@@ -73,36 +73,21 @@ ws = wb.create_sheet(title='Courses') # Set active worksheet and name
 
 ###############################################################################
 # Set columns for course summary sheet (this way one needs to do this once)
-#
-col_term = 'A'
-col_cid = 'B'
-col_cnm = 'C'
-col_ccd = 'D'
-col_cadmin = 'E'
-col_cavail = 'F'
-col_tenroll = 'G'
-col_senroll = 'H'
-
-# Format course summary sheet
-ws[col_term+'1'] = 'Term'
-ws[col_cid+'1'] = 'Course ID'
-ws[col_cnm+'1'] = 'Course Name'
-ws[col_ccd+'1'] = 'Course Code'
-ws[col_cadmin+'1'] = 'Admin'
-ws[col_cavail+'1'] = 'Availability'
-ws[col_tenroll+'1'] = 'Teachers Enrolled'
-ws[col_senroll+'1'] = 'Students Enrolled'
-
-# Set column widths if needed
-ws.column_dimensions[col_term].width = 10
-ws.column_dimensions[col_cid].width = 11
-ws.column_dimensions[col_cnm].width = 30
-ws.column_dimensions[col_ccd].width = 15
-ws.column_dimensions[col_cadmin].width = 15
-ws.column_dimensions[col_cavail].width = 15
-ws.column_dimensions[col_tenroll].width = 20
-ws.column_dimensions[col_senroll].width = 20
-
+(	col_term, col_cid, col_cnm, col_ccd, col_cadmin, col_cavail, col_tenroll, 
+	col_senroll
+ ) = [chr(65 + i) for i in range(8)] # A -> H assignment
+# Format course summary sheet and column widths
+cols = { # key = column name, col_xyz = column reference, int = column width
+	'Term' : [col_term, 10], 'Course ID' : [col_cid, 11], 
+	'Course Name' : [col_cnm, 30], 'Course Code' : [col_ccd, 15],
+	'Admin' : [col_cadmin, 15], 'Availability' : [col_cavail, 15],
+	'Teachers Enrolled' : [col_tenroll, 20], 
+	'Students Enrolled' : [col_senroll, 20]
+	}
+# Format course summary sheet and column widths
+for key in cols:
+	ws[cols[key][0] + '1'] = key
+	ws.column_dimensions[cols[key][0]].width = cols[key][1]
 
 
 ###############################################################################
@@ -124,7 +109,7 @@ for course in allcourses:
 #print json.dumps(courses, indent = 2)
 
 
-i = 2
+i = 2 # row in ws
 for course in courses: # Loop through all courses in Canvas account
 	ws[col_term+str(i)] = course['term']['name']
 	ws[col_cid+str(i)] = '=HYPERLINK("http://147.188.152.33:8080/eval.php?url=https://canvas.bham.ac.uk/courses/'+str(course['id'])+'", "'+str(course['id'])+'")'
@@ -154,79 +139,31 @@ ws = wb.create_sheet(title='Assignments') # Set active worksheet
 ###############################################################################
 # Set columns for assignment summary sheet (this way one needs to do this once)
 #
-col_cid = 'A'
-col_cnm = 'B'
-col_ccd = 'C'
-col_term = 'D'
-col_asgnid = 'E'
-col_asgnnm = 'F'
-col_cadmin = 'G'
-col_cavail = 'H'
-col_asgnavail = 'I'
-col_asgntype = 'J'
-col_group = 'K'
-col_unlock = 'L'
-col_due = 'M'
-col_lock = 'N'
-col_sub = 'O'
-col_ungr = 'P'
-col_miss = 'Q'
-col_late = 'R'
-col_median = 'S'
-col_points = 'T'
-col_grby = 'U'
-col_fingr = 'V'
-col_weight = 'W'
-col_muted = 'X'
-col_manual = 'Y'
-
-
-# Format assignment summary sheet
-ws[col_cid+'1'] = 'Course ID'
-ws[col_cnm+'1'] = 'Course Name'
-ws[col_ccd+'1'] = 'Course Code'
-ws[col_term+'1'] = 'Term'
-ws[col_asgnid+'1'] = 'Assignment ID'
-ws[col_asgnnm+'1'] = 'Assignment Name'
-ws[col_cadmin+'1'] = 'Admin'
-ws[col_cavail+'1'] = 'Course Availability'
-ws[col_asgnavail+'1'] = 'Assignment Availability'
-ws[col_asgntype+'1'] = 'Assignment Type'
-ws[col_group+'1'] = 'Grouped'
-ws[col_unlock+'1'] = 'Unlock at'
-ws[col_due+'1'] = 'Due at'
-ws[col_lock+'1'] = 'Lock at'
-ws[col_sub+'1'] = 'Submissions'
-ws[col_ungr+'1'] = 'Ungraded'
-ws[col_miss+'1'] = 'Missing'
-ws[col_late+'1'] = 'Late'
-ws[col_median+'1'] = 'Median'
-ws[col_points+'1'] = 'Points possible'
-ws[col_grby+'1'] = 'Grade by'
-ws[col_fingr+'1'] = 'Summative or Formative'
-ws[col_weight+'1'] = 'Weighting'
-ws[col_muted+'1'] = 'Muted'
-ws[col_manual+'1'] = 'Manual'
-
-# Set column widths if needed
-ws.column_dimensions[col_cid].width = 11
-ws.column_dimensions[col_cnm].width = 20
-ws.column_dimensions[col_ccd].width = 15
-ws.column_dimensions[col_asgnid].width = 14
-ws.column_dimensions[col_asgnnm].width = 30
-ws.column_dimensions[col_cadmin].width = 15
-ws.column_dimensions[col_cavail].width = 17
-ws.column_dimensions[col_asgnavail].width = 17
-ws.column_dimensions[col_asgntype].width = 16
-ws.column_dimensions[col_unlock].width = 17
-ws.column_dimensions[col_due].width = 17
-ws.column_dimensions[col_lock].width = 17
-ws.column_dimensions[col_sub].width = 12
-ws.column_dimensions[col_ungr].width = 12
-ws.column_dimensions[col_grby].width = 12
-ws.column_dimensions[col_fingr].width = 12
-ws.column_dimensions[col_weight].width = 12
-
+(	col_cid, col_cnm, col_ccd, col_term, col_asgnid, col_asgnnm, col_cadmin,
+	col_cavail, col_asgnavail, col_asgntype, col_group, col_unlock, col_due,
+	col_lock, col_sub, col_ungr, col_miss, col_late, col_median, col_points,
+	col_grby, col_fingr, col_weight, col_muted, col_manual, col_daysafter
+) = [chr(65 + i) for i in range(26)] # A -> Z assignment (will not work if more cols added!)
+cols = { # key = column name, col_xyz = column reference, int = column width
+	'Course ID' : [col_cid, 11], 'Course Name' : [col_cnm, 20], 
+	'Course Code'  : [col_ccd, 15], 'Term' : [col_term, 14],
+	'Assignment ID' : [col_asgnid, 30], 'Assignment Name' : [col_asgnnm, 15], 
+	'Admin' : [col_cadmin, 17], 'Course Availability' : [col_cavail, 17], 
+	'Assignment Availability' : [col_asgnavail, 17], 
+	'Assignment Type' : [col_asgntype, 16], 'Grouped' : [col_group, 17], 
+	'Unlock at' : [col_unlock, 17], 'Due at' : [col_due, 17], 
+	'Lock at' : [col_lock, 17], 'Submissions' : [col_sub, 12], 
+	'Ungraded' : [col_ungr, 12], 'Missing' : [col_miss, 12], 
+	'Late' : [col_late, 12], 'Median' : [col_median, 12], 
+	'Points possible' : [col_points, 12], 'Grade by' : [col_grby, 12],
+	'Summative or Formative' : [col_fingr, 12],	'Weighting' : [col_weight, 12],
+	'Muted' : [col_muted, 15], 'Manual' : [col_manual, 15],
+	'Days since Deadline' : [col_daysafter, 18]
+	}
+# Format assignment summary sheet and column widths
+for key in cols:
+	ws[cols[key][0] + '1'] = key
+	ws.column_dimensions[cols[key][0]].width = cols[key][1]
 
 
 ###############################################################################
@@ -318,76 +255,18 @@ for course in courses:
 		else:
 			due_date = datetime.datetime.strptime(assignment['due_at'], "%Y-%m-%dT%H:%M:%SZ")
 			ws[col_due+str(i)] = str(due_date)
-			grade_by = ((pandas.Timestamp(np.busday_offset(due_date, offset_days, roll='forward'))).to_pydatetime()).date()
-			ws[col_grby+str(i)] = str(grade_by)
+			days_after, grade_by, is_working_day = uob_utils.days_since_deadline(due_date)
 			#recipients = []
 			#cc_recipients = []
-			if (int(np.busday_count(due_date,today)) in reminder_dates[0]) and assignment['needs_grading_count'] != 0: # If reminder email for teacher is needed
-				# Collects email of all teachers for assignment to email
-				recipients = deepcopy(TSO_email)
-				recipients.extend(re.findall('[A-Za-z0-9\.]*@bham.ac.uk',assignment['description']))
-				message_subject = 'IMPORTANT: An assignment needs to be graded'
-				message_body = """Hi,
-
-This is an IMPORTANT reminder that the due date for grading %s will be in 5 days and there are still submissions left ungraded.
-Meeting the 15 working day turnaround time is vitally important for us as a school as it plays directly into our NSS scores. So, could you please address this as soon as possible?
-Link: %s
-
-Submissions: %s
-Ungraded submissions: %s
-Muted: 
-
-Best Regards,
-Met&Mat Office
-				""" % (assignment['name'], assignment['html_url'], ws[col_sub+str(i)].value, assignment['needs_grading_count'])
-				# Now send email to teachers
-				msg = uob_utils.EMailMessage(", ".join(recipients), message_subject)
-				msg.body(message_body)
-				mail.send(recipients, msg) # Send email
-			elif (int(np.busday_count(due_date,today)) in reminder_dates[1]) and assignment['needs_grading_count'] != 0: # If reminder email for teacher and TSO is needed
-				# Collects email of all teachers for assignment to email
-				recipients = deepcopy(TSO_email)
-				recipients.extend(re.findall('[A-Za-z0-9\.]*@bham.ac.uk',assignment['description']))
-				message_subject = 'ATTENTION REQUIRED: Assignment submissions still ungraded'
-				message_body = """Hi,
-
-This is an VERY IMPORTANT reminder that the due date for grading %s is tomorrow, and there are still submissions left ungraded.
-This must be addressed immediately.
-Link: %s
-
-Submissions: %s
-Ungraded submissions: %s
-Muted: 
-
-Best Regards,
-Met&Mat Office
-				""" % (assignment['name'], assignment['html_url'], ws[col_sub+str(i)].value, assignment['needs_grading_count'])
-				# Now send email to teachers and TSO
-				msg = uob_utils.EMailMessage(", ".join(recipients), message_subject)
-				msg.body(message_body)
-				mail.send(recipients, msg) # Send email
-			elif int(np.busday_count(due_date,today)) in reminder_dates[2]: # If reminder email for teacher and TSO is needed
-				# Collects email of all teachers for assignment to email
-				recipients = deepcopy(TSO_email)
-				message_subject = 'ATTENTION REQUIRED: Feedback deadline has passed'
-				message_body = """Hi,
-
-Deadline for assignment feedback has passed, here is a summary of relevant information:
-
-Assignment: %s 
-Link: %s
-
-Submissions: %s
-Ungraded submissions: %s
-Manual posting: %s
-
-Best Regards,
-Met&Mat Office
-				""" % (assignment['name'], assignment['html_url'], ws[col_sub+str(i)].value, assignment['needs_grading_count'], assignment['post_manually'])
-				# Now send email to teachers and TSO
-				msg = uob_utils.EMailMessage(", ".join(recipients), message_subject)
-				msg.body(message_body)
-				mail.send(recipients, msg) # Send email
+			ws[col_grby+str(i)] = str(grade_by)	
+			ws[col_daysafter + str(i)] = str(days_after)
+			if (days_after in reminder_dates[0]) and assignment['needs_grading_count'] != 0 and is_working_day:
+				uob_utils.produce_email('5 days left', assignment, TSO_email, ws, col_sub, i)
+			elif (days_after in reminder_dates[1]) and assignment['needs_grading_count'] != 0 and is_working_day:
+				uob_utils.produce_email('1 day left', assignment, TSO_email, ws, col_sub, i)
+			elif days_after in reminder_dates[2] and is_working_day:
+				uob_utils.produce_email('overdue', assignment, TSO_email, ws, col_sub, i)
+		
 		if assignment['lock_at'] == None:
 			ws[col_lock+str(i)] = 'None set'
 		else:
@@ -431,7 +310,6 @@ Met&Mat Office
 
 # Make the workbook into a filtered table.
 ws.auto_filter.ref = 'A1:AA'+str(i)
-
 
 
 ###############################################################################
