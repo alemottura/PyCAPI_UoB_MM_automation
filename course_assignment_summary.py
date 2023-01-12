@@ -11,7 +11,7 @@
 #       Things that need to be set:
 #
 #       output_dir - path of Excel file to be saved
-output_dir = "" #'/mnt/metadmin/CANVASBOTS/'
+output_dir = '/mnt/metadmin/CANVASBOTS/'
 #
 #       name_extenstion - name of Excel file after Canvas course number
 name_extension = 'assignment_summary'
