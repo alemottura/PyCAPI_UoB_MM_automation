@@ -175,7 +175,7 @@ def days_since_deadline(deadline): # returns number of days since submission dea
     ]
     closed_days = [datetime.datetime(i[0], i[1], i[2]) for i in READABLE_CLOSED_DAYS]
     closed_dates = [closed_day.date() for closed_day in closed_days] # Closed dates without times
-    days_elapsed = math.ceil((today - deadline).total_seconds() / 86400)
+    days_elapsed = int(math.ceil((today - deadline).total_seconds() / 86400))
     for i in range(1, days_elapsed + 1): # Remove weekends
         date = deadline + datetime.timedelta(days = i)
         day_of_the_week = date.weekday()
@@ -201,13 +201,16 @@ def days_since_deadline(deadline): # returns number of days since submission dea
 
 def produce_email(days_left, assignment, TSO_email, ws, col_sub, i):
     mail = MailAPI()
-    with open('marking_messages.json', 'r') as raw_json:
+    with open('/home/localuser/codes/PyCAPI_UoB_MM_automation/marking_messages.json', 'r') as raw_json:
         messages = json.loads(raw_json.read())
     recipients = deepcopy(TSO_email)
     if days_left in ['1 day left', '5 days left']:
         recipients.extend(re.findall('[A-Za-z0-9\.]*@bham.ac.uk',assignment['description']))
     message_subject = messages['subject'][days_left]
-    message_body = messages['body'][days_left] % (assignment['name'], assignment['html_url'], ws[col_sub+str(i)].value, assignment['needs_grading_count'])
+    if days_left == 'overdue':
+        message_body = messages['body'][days_left] % (assignment['name'], assignment['html_url'], ws[col_sub+str(i)].value, assignment['needs_grading_count'], '??')
+    else:
+        message_body = messages['body'][days_left] % (assignment['name'], assignment['html_url'], ws[col_sub+str(i)].value, assignment['needs_grading_count'])
     msg = EMailMessage(", ".join(recipients), message_subject)
     msg.body(message_body)
     mail.send(recipients, msg) # Send email

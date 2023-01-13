@@ -37,7 +37,7 @@ while ws['A'+str(i)].value != None:
 
 
 
-
+"""
 def days_late(deadline, submission):
     if (submission-deadline).total_seconds() < 600:
         return 0
@@ -73,8 +73,17 @@ def days_late(deadline, submission):
             return math.ceil(((friday-deadline).total_seconds() - 518400)/86400)
         else:
             return math.ceil(((submission-deadline).total_seconds() - 518400)/86400)
-    
 
+"""    
+holidays=['2022-12-19','2022-12-20','2022-12-21','2022-12-22','2022-12-23','2022-12-26','2022-12-27','2022-12-28','2022-12-29','2022-12-30','2023-01-02']
+
+def days_late(deadline, submission):
+    if (submission-deadline).total_seconds() < 600:
+        return 0
+    no_days_late = np.busday_count(deadline.strftime("%Y-%m-%d"), submission.strftime("%Y-%m-%d"), weekmask='1111100', holidays=holidays)
+    if submission.time() > deadline.time() and submission.strftime("%Y-%m-%d") not in holidays:
+        no_days_late = no_days_late+1
+    return no_days_late
 
 
 for assignment in assignment_list:
